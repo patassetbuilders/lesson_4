@@ -47,8 +47,8 @@ def joinor(brd) # improves layout of empty square
   if array_length > 1
     first_string = empty_square(brd)[0..(array_length - 2)].join(',')
     second_string = " or #{empty_square(brd).last}"
-  return first_string + second_string
-else
+    return first_string + second_string
+  else
     return empty_square(brd).last.to_s
   end
 end
@@ -80,7 +80,7 @@ def at_risk_square?(brd)
   nil
 end
 
-def has_advantage_square?(brd)
+def advantage_square?(brd)
   has_advantage_square = 0
   # if the computer already has two squares in a row go for the third
   WINNING_LINES.each do |line|
@@ -132,16 +132,14 @@ def detect_winner(brd)
   nil
 end
 
-
-player = 0 #score
+player = 0 # score
 computer = 0
-loop do #play again loop
-  while player < 5 || computer < 5 do #best of five loop 
-  board = initialize_board
-  display_board(board, computer, player)
-  prompt("\n")
-  
-  
+loop do # play again loop
+  while player < 5 || computer < 5 # best of five loop
+    board = initialize_board
+    display_board(board, computer, player)
+    prompt("\n")
+
     loop do
       player_places_piece!(board)
       display_board(board, computer, player)
@@ -149,7 +147,7 @@ loop do #play again loop
       display_board(board, computer, player)
       break if board_full?(board) || somebody_won?(board)
     end
-   
+
     if somebody_won?(board)
       prompt "#{detect_winner(board)} won!"
       if detect_winner(board) == 'Computer'
@@ -159,7 +157,7 @@ loop do #play again loop
       end
       prompt("Current score computer #{computer} player #{player}")
       prompt('Next game')
-      gets 
+      gets
     else
       prompt('Its a tie')
       prompt("Current score computer #{computer} player #{player}")
@@ -167,12 +165,12 @@ loop do #play again loop
       gets
     end
   end
-    prompt('Would you like to play again? Y / N')
-    play_again = gets.chomp.downcase
-    if play_again != 'y'
-      player = 0 #score
-      computer = 0
-      break
-    end
+  prompt('Would you like to play again? Y / N')
+  play_again = gets.chomp.downcase
+  unless play_again == 'y'
+    player = 0 # score
+    computer = 0
+    break
+  end
 end
 'Thank you for playing Tic Tack Toe'
