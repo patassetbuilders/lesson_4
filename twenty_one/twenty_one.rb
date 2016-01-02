@@ -12,7 +12,7 @@ end
 def initialize_deck
   deck = {}
   suit =  %w( h d s c )
-  picture = %w(J Q K a ) # used for sorting
+  picture = %w(J Q K a ) # a used for sorting, when evaluating hand I want to process aces last.
   suit.each do |suits|
     (2..9).each do |num|
       card = num.to_s + suits
@@ -38,7 +38,7 @@ def cal_hand(hand)
       count += card.to_i
     elsif picture.include? card
       count += 10
-    elsif x.count('a') > 1 || count > 10 # note counting is unnecessary
+    elsif  count > 10 # processing aces last
       count += 1
     else
       count += 11
@@ -96,12 +96,13 @@ deck = initialize_deck
 your_score = 0
 dealer_score = 0
 # deal cards
-while unused(deck).size > 10
+while unused(deck).size > 10 # only one deck being used but ..
+  # card counters dont get to see the last ten cards.
   prompt("Playing 21")
   count_players_hand = 0
   count_dealers_hand = 0
   prompt("Shuffling cards")
-
+  sleep(1)
   2.times { deal_player(deck) }
   count_players_hand = cal_hand(players_hand(deck))
   1.times { deal_dealer(deck) } # times unnecessary but included for readability IMHO
@@ -118,6 +119,10 @@ while unused(deck).size > 10
     deal_dealer(deck)
     count_dealers_hand = cal_hand(dealers_hand(deck))
   end
+  # should line 126 to 136 be a method, it does three things
+  # 1 determines who won the hand
+  # 2 updates the overall game scores
+  # 3 displays hands and hand values
   if count_players_hand < 22 && count_players_hand > count_dealers_hand || count_players_hand < 22 && count_dealers_hand > 21
     your_score += 1
     display_hands(deck, count_players_hand, your_score, dealer_score)
@@ -130,7 +135,7 @@ while unused(deck).size > 10
     prompt("Dealer wins this round.")
   end
   prompt("Press 'Enter' to continue 'Control-C' to quit")
-  gets
+  gets # halts play so player can read score, game consistes of a full deck
   mark_used(players_hand(deck), deck)
   mark_used(dealers_hand(deck), deck)
 end
